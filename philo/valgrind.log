@@ -1,0 +1,83 @@
+==7610== Memcheck, a memory error detector
+==7610== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==7610== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==7610== Command: ./philosophers 1 800 200 200
+==7610== 
+==7610== 
+==7610== Process terminating with default action of signal 2 (SIGINT)
+==7610==    at 0x48F8D71: __futex_abstimed_wait_common64 (futex-internal.c:57)
+==7610==    by 0x48F8D71: __futex_abstimed_wait_common (futex-internal.c:87)
+==7610==    by 0x48F8D71: __futex_abstimed_wait_cancelable64 (futex-internal.c:139)
+==7610==    by 0x48FE7A2: __pthread_clockjoin_ex (pthread_join_common.c:102)
+==7610==    by 0x1095D1: start_routine (main.c:77)
+==7610==    by 0x109773: main (main.c:119)
+==7610== 
+==7610== HEAP SUMMARY:
+==7610==     in use at exit: 4,504 bytes in 6 blocks
+==7610==   total heap usage: 6 allocs, 0 frees, 4,504 bytes allocated
+==7610== 
+==7610== 8 bytes in 1 blocks are still reachable in loss record 1 of 6
+==7610==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7610==    by 0x1098FF: ft_calloc (utils.c:55)
+==7610==    by 0x109EA5: ft_malloc (ft_malloc.c:30)
+==7610==    by 0x109C63: init_philos (init.c:34)
+==7610==    by 0x109DA8: init_threads (init.c:56)
+==7610==    by 0x10975B: main (main.c:118)
+==7610== 
+==7610== 16 bytes in 1 blocks are still reachable in loss record 2 of 6
+==7610==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7610==    by 0x1098FF: ft_calloc (utils.c:55)
+==7610==    by 0x109ED1: ft_malloc (ft_malloc.c:34)
+==7610==    by 0x109D77: init_threads (init.c:52)
+==7610==    by 0x10975B: main (main.c:118)
+==7610== 
+==7610== 16 bytes in 1 blocks are still reachable in loss record 3 of 6
+==7610==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7610==    by 0x1098FF: ft_calloc (utils.c:55)
+==7610==    by 0x109ED1: ft_malloc (ft_malloc.c:34)
+==7610==    by 0x109C63: init_philos (init.c:34)
+==7610==    by 0x109DA8: init_threads (init.c:56)
+==7610==    by 0x10975B: main (main.c:118)
+==7610== 
+==7610== 96 bytes in 1 blocks are still reachable in loss record 4 of 6
+==7610==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7610==    by 0x1098FF: ft_calloc (utils.c:55)
+==7610==    by 0x109EA5: ft_malloc (ft_malloc.c:30)
+==7610==    by 0x109D77: init_threads (init.c:52)
+==7610==    by 0x10975B: main (main.c:118)
+==7610== 
+==7610== 272 bytes in 1 blocks are possibly lost in loss record 5 of 6
+==7610==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7610==    by 0x40145AB: calloc (rtld-malloc.h:44)
+==7610==    by 0x40145AB: allocate_dtv (dl-tls.c:370)
+==7610==    by 0x40145AB: _dl_allocate_tls (dl-tls.c:629)
+==7610==    by 0x48FD616: allocate_stack (allocatestack.c:429)
+==7610==    by 0x48FD616: pthread_create@@GLIBC_2.34 (pthread_create.c:655)
+==7610==    by 0x10957C: start_routine (main.c:69)
+==7610==    by 0x109773: main (main.c:119)
+==7610== 
+==7610== 4,096 bytes in 1 blocks are still reachable in loss record 6 of 6
+==7610==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==7610==    by 0x48E51B4: _IO_file_doallocate (filedoalloc.c:101)
+==7610==    by 0x48F5523: _IO_doallocbuf (genops.c:347)
+==7610==    by 0x48F2F8F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:745)
+==7610==    by 0x48F3AAE: _IO_new_file_xsputn (fileops.c:1244)
+==7610==    by 0x48F3AAE: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
+==7610==    by 0x48C0CC8: __printf_buffer_flush_to_file (printf_buffer_to_file.c:59)
+==7610==    by 0x48C0CC8: __printf_buffer_to_file_done (printf_buffer_to_file.c:120)
+==7610==    by 0x48CB5A9: __vfprintf_internal (vfprintf-internal.c:1560)
+==7610==    by 0x48C01B2: printf (printf.c:33)
+==7610==    by 0x1093CF: eat (main.c:28)
+==7610==    by 0x10949B: routine (main.c:51)
+==7610==    by 0x48FCAA3: start_thread (pthread_create.c:447)
+==7610==    by 0x4989A33: clone (clone.S:100)
+==7610== 
+==7610== LEAK SUMMARY:
+==7610==    definitely lost: 0 bytes in 0 blocks
+==7610==    indirectly lost: 0 bytes in 0 blocks
+==7610==      possibly lost: 272 bytes in 1 blocks
+==7610==    still reachable: 4,232 bytes in 5 blocks
+==7610==         suppressed: 0 bytes in 0 blocks
+==7610== 
+==7610== For lists of detected and suppressed errors, rerun with: -s
+==7610== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

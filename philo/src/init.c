@@ -6,56 +6,70 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 17:29:14 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/04/03 20:29:30 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/19 23:42:40 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_philos(int argc, char **argv, t_philo *threads, int pos)
+static void	init_forks(t_table *table)
 {
-	threads[pos].id = pos + 1;
-	threads[pos].time_to_die = ft_atol(argv[2]);
-	threads[pos].time_to_eat = ft_atol(argv[3]);
-	threads[pos].time_to_sleep = ft_atol(argv[4]);
-	if (argc == 6)
-		threads[pos].times_each_eat = ft_atol(argv[5]);
-	else
-		threads[pos].times_each_eat = -1;
-	if (pos != 0)
-		threads[pos].previous = &threads[pos - 1];
-	if (pos != ft_atol(argv[1]) - 1)
-		threads[pos].next = &threads[pos + 1];
-	else
-	{
-		threads[pos].next = &threads[0];
-		threads[0].previous = &threads[pos];
-	}
-	threads[pos].forks = (int *)ft_malloc(sizeof(int) * 2);
-	if (!threads[pos].forks)
+	int	i;
+
+	table->fork_locks = (pthread_mutex_t *)ft_malloc(sizeof(pthread_mutex_t) * table->n_of_philos);
+	if (!table->fork_locks)
 		handle_error(MALLOC_ERROR);
-	threads[pos].forks[0] = 0;
-	threads[pos].forks[1] = 0;
-	pthread_mutex_init(&threads[pos].fork_lock, NULL);
+	i = 0;
+	while (i < table->n_of_philos)
+	{
+		if (pthread_mutex_init(&table->fork_locks[i], NULL) != 0)
+			handle_error(MUTEX_ERROR);
+		i++;
+	}
 }
 
-void	init_threads(int argc, char **argv)
+static void	init_global_mutexes(t_table *table)
 {
-	int		i;
-	int		n_of_philos;
-	t_table	*table;
-	t_philo	*threads;
+	init_forks(table);
+	if (!table->fork_locks)
+		handle_error(MUTEX_ERROR);
+	if (pthread_mutex_init(&table->stop_lock, NULL) != 0)
+		handle_error(MUTEX_ERROR);
+	if (pthread_mutex_init(&table->print_lock, NULL) != 0)
+		handle_error(MUTEX_ERROR);
+}
 
-	i = -1;
-	n_of_philos = ft_atol(argv[1]);
-	table = get_table();
-	threads = (t_philo *)ft_malloc(sizeof(t_philo) * n_of_philos);
-	if (!threads)
+static void	init_threads(t_table *table)
+{
+	t_philo	*threads;
+	int		i;
+
+	table->threads = (t_philo *)ft_malloc(sizeof(t_philo) * table->n_of_philos);
+	if (!table->threads)
 		handle_error(MALLOC_ERROR);
-	while (++i < n_of_philos)
-		init_philos(argc, argv, threads, i);
-	table->threads = threads;
-	table->n_of_philos = n_of_philos;
+	while (i < table->n_of_philos)
+	{
+		if (pthread_mutex_init(&(table->threads[i]).meal_lock, NULL) != 0)
+			handle_error(MUTEX_ERROR);
+		table->threads[i].id = i;
+		table->threads[i].times_ate = 0;
+		table->threads[i].forks[0] = table->threads[i].id;
+		table->threads[i].forks[1] = (table->threads[i].id + 1) % table->n_of_philos;
+		if (i % 2 == 0)
+		{
+			table->threads[i].forks[0] = (table->threads[i].id + 1) % table->n_of_philos;
+			table->threads[i].forks[1] = table->threads[i].id;			
+		}
+		i++;
+	}
+}
+
+void	init_table(int argc, char **argv)
+{
+	t_table	*table;
+
+	table = get_table();
+	table->n_of_philos = ft_atol(argv[1]);
 	table->time_to_die = ft_atol(argv[2]);
 	table->time_to_eat = ft_atol(argv[3]);
 	table->time_to_sleep = ft_atol(argv[4]);
@@ -63,4 +77,9 @@ void	init_threads(int argc, char **argv)
 		table->times_each_eat = ft_atol(argv[5]);
 	else
 		table->times_each_eat = -1;
+	table->stop_sim = FALSE;
+	init_threads(table);
+	if (!table->threads)
+		handle_error(THREAD_ERROR);
+	init_table_mutexes(table);
 }

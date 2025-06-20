@@ -15,15 +15,22 @@ NAME = philosophers
 
 # COMPILATION AND FLAGS
 CC = cc
-CFLAGS = -g3 -Wall -Werror -Wextra -Iinclude -lpthread -fsanitize=thread -g
+CFLAGS = -g3 -Wall -Werror -Wextra
+INCLUDES = -Iinclude
+LIB_PATHS = -lpthread
+#remember to add later: -fsanitize=thread -g
 
 # PATHS
 SRC_DIR = src/
 OBJ_DIR = obj/
 
 # MANDATORY FILES AND OBJECTS
-SRC = $(wildcard $(SRC_DIR)*.c)
-OBJ = $(addprefix $(OBJ_DIR), $(notdir $(SRC:%.c=%.o)))
+SRC := $(addprefix $(SRC_DIR), main.c utils.c exit.c init.c garbage_collector/ft_malloc.c garbage_collector/ft_malloc_utils.c)
+OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
+
+# VALGRIND TOOLS
+LEAK = valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all
+RACE = valgrind -q --tool=helgrind
 
 # ------------------------------ Colors ------------------------------
 
@@ -47,14 +54,15 @@ $(OBJ_DIR):
 	@mkdir -p $@
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@printf "$(BLUE)$@: $(RESET)\n"
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 	@printf "$(GREEN_BOLD)Object compiled.$(RESET)\n"
 
 $(NAME): $(OBJ)
 	@printf "$(GREEN_BOLD) => 100%%$(RESET)\n"
 	@printf "$(MAGENTA_BOLD)[philosophers]:\t$(RESET)"
-	$(CC) $(CFLAGS) $(OBJ) $(LIB_PATHS) -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIB_PATHS) -o $@
 	@printf "$(GREEN_BOLD) => Success!$(RESET)\n"
 
 norm:
@@ -63,8 +71,11 @@ norm:
 	@echo "\n$(MAGENTA_BOLD)======= INCLUDES =======$(RESET)"
 	@norminette include | sed 's/OK/\x1b[1;32m&\x1b[0m/g' | sed 's/Error/\x1b[1;31m&\x1b[0m/g'
 
-leak: $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes ./$(NAME) <args>
+val: $(NAME)
+	@$(LEAK) ./$(NAME) 1 800 200 200 > valgrind.log 2>&1
+
+race: $(NAME)
+	@$(RACE) ./$(NAME) 4 800 200 200 > valgrind.log 2>&1
 
 clean:
 	@rm -rf $(OBJ_DIR)
@@ -76,4 +87,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re leak norm
+.PHONY: all clean fclean re val race norm

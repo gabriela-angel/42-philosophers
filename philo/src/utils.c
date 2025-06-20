@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:04:08 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/04/03 19:59:59 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/19 20:46:00 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,26 @@ long	ft_atol(const char *nptr)
 		i++;
 	}
 	return ((nb * sign));
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	if (nmemb == 0 || size == 0)
+		return (malloc(0));
+	if ((nmemb * size) > (size_t)-1)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (!ptr)
+		return (NULL);
+	memset(ptr, 0, nmemb * size);
+	return (ptr);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= 48 && c <= 57)
+		return (1);
+	return (0);
 }

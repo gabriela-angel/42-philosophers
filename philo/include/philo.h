@@ -6,18 +6,20 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:14:54 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/04/03 20:30:12 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/19 23:39:59 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <string.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <limits.h>
 
 # define WRONG_USAGE "Error: Wrong format. Try: ./philo <number_of_philosophers> \
 <time_to_die> <time_to_eat> <time_to_sleep> \
@@ -25,9 +27,19 @@
 # define INVALID_CHARACTER "Error: invalid number or character."
 # define INVALID_PHILO_NO "Error: there must be at least 1 philosopher."
 # define THREAD_ERROR "Error: could not create thread."
+# define MUTEX_ERROR "Error: could not initialize mutex."
 # define JOIN_ERROR "Error: could not join thread."
 # define MALLOC_ERROR "Error: could not allocate memory."
 
+typedef struct s_philo
+{
+	pthread_t		thread;
+	int				id;
+	int				times_ate;
+	int				last_meal;
+	int				forks[2];
+	pthread_mutex_t	meal_lock;
+}	t_philo;
 
 typedef struct s_table
 {
@@ -37,40 +49,55 @@ typedef struct s_table
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				times_each_eat;
+	int				start_time;
+	t_bool			stop_sim;
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	stop_lock;
+	pthread_mutex_t	*fork_locks;
 }	t_table;
 
-typedef struct s_philo
+typedef enum e_action
 {
-	pthread_t		philo;
-	int				id;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				times_each_eat;
-	int				*forks;
-	pthread_mutex_t	fork_lock;
-	t_philo			*previous;
-	t_philo			*next;
-}	t_philo;
+	TAKE_FORK,
+	EAT,
+	SLEEP,
+	THINK,
+	DIE,
+}	t_action;
+
+typedef enum e_bool
+{
+	FALSE,
+	TRUE
+}	t_bool;
+
+// GARBAGE COLLECTOR -----------------
 
 typedef struct s_malloc
 {
-	void	*list[1000];
-	size_t	i;
+	void			*ptr;
+	struct s_malloc	*next;
 }	t_malloc;
 
-//FT_MALLOC -----------------
-void	*ft_malloc(size_t size);
-void	ft_free_all(void);
+t_malloc	*get_malloc_item(void);
+void		*ft_malloc(size_t size);
+void		ft_gc_free(void *ptr);
+void		ft_gc_exit(void);
+t_bool		ft_gc_add(void *ptr);
+void		ft_gc_free_matrix(char **matrix);
 
 //UTILS -------------------
-int		ft_atol(const char *nptr);
+t_table		*get_table(void);
+long		ft_atol(const char *nptr);
+void		*ft_calloc(size_t nmemb, size_t size);
+int			ft_isdigit(int c);
 
 //INIT -------------------
-t_philo	*init_threads(int argc, char **argv);
-void	init_philos(int argc, char **argv, t_philo *threads, int pos);
+void	init_table(int argc, char **argv);
+void	init_threads();
 
 //EXIT -------------------
 void	destroy_mutexes(t_philo *threads, int n_of_philos);
+void	handle_error(char *error_msg);
 
 #endif
