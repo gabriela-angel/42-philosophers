@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:14:54 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/19 23:39:59 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:16:35 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_philo
 typedef struct s_table
 {
 	t_philo			*threads;
+	pthread_t		manager;
 	int				n_of_philos;
 	int				time_to_die;
 	int				time_to_eat;
@@ -72,32 +73,32 @@ typedef enum e_bool
 }	t_bool;
 
 // GARBAGE COLLECTOR -----------------
-
 typedef struct s_malloc
 {
 	void			*ptr;
 	struct s_malloc	*next;
 }	t_malloc;
 
-t_malloc	*get_malloc_item(void);
-void		*ft_malloc(size_t size);
-void		ft_gc_free(void *ptr);
-void		ft_gc_exit(void);
-t_bool		ft_gc_add(void *ptr);
-void		ft_gc_free_matrix(char **matrix);
-
-//UTILS -------------------
-t_table		*get_table(void);
-long		ft_atol(const char *nptr);
 void		*ft_calloc(size_t nmemb, size_t size);
+t_bool		ft_gc_add(void *ptr);
+void		ft_gc_exit(void);
+void		ft_gc_free(void *ptr);
+void		ft_gc_free_matrix(char **matrix);
+void		*ft_malloc(size_t size);
+t_malloc	*get_malloc_item(void);
+
+// UTILS -------------------
+long		ft_atol(const char *nptr);
 int			ft_isdigit(int c);
+void		ft_usleep(int miliseconds);
+t_table		*get_table(void);
+int			get_time_in_ms(void);
 
-//INIT -------------------
-void	init_table(int argc, char **argv);
-void	init_threads();
+// INIT -------------------
+void		init_table(int argc, char **argv);
 
-//EXIT -------------------
-void	destroy_mutexes(t_philo *threads, int n_of_philos);
-void	handle_error(char *error_msg);
+// EXIT -------------------
+void		destroy_mutexes(void);
+void		handle_error(char *error_msg);
 
 #endif

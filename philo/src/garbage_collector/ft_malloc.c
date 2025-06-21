@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 13:52:06 by acesar-m          #+#    #+#             */
-/*   Updated: 2025/06/19 21:02:18 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:07:20 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,21 @@ t_malloc	*get_malloc_item(void)
 	static t_malloc	mlc;
 
 	return (&mlc);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	if (nmemb == 0 || size == 0)
+		return (malloc(0));
+	if ((nmemb * size) > (size_t)-1)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (!ptr)
+		return (NULL);
+	memset(ptr, 0, nmemb * size);
+	return (ptr);
 }
 
 void	*ft_malloc(size_t size)

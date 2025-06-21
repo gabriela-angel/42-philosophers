@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 17:29:14 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/19 23:42:40 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:16:56 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	init_forks(t_table *table)
 	}
 }
 
-static void	init_global_mutexes(t_table *table)
+static void	init_table_mutexes(t_table *table)
 {
 	init_forks(table);
 	if (!table->fork_locks)

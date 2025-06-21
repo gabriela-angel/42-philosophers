@@ -6,21 +6,27 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 17:23:41 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/19 23:45:14 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/21 16:01:40 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// FIX THIS!
-void	destroy_mutexes(t_philo *threads, int n_of_philos)
+void	destroy_mutexes(void)
 {
+	t_table	*table;
 	int	i;
 
 	i = 0;
-	while (i < n_of_philos)
+	table = get_table();
+	if (!table)
+		return;
+	pthread_mutex_destroy(&table->print_lock);
+	pthread_mutex_destroy(&table->stop_lock);
+	while (i < table->n_of_philos)
 	{
-		pthread_mutex_destroy(&threads[i].meal_lock);
+		pthread_mutex_destroy(&(table->threads[i]).meal_lock);
+		pthread_mutex_destroy(&table->fork_locks[i]);
 		i++;
 	}
 }
@@ -32,10 +38,7 @@ void	print_err_msg(char *error_msg)
 
 void	handle_error(char *error_msg)
 {
-	t_table	*table;
-
-	table = get_table();
-	destroy_mutexes(table->threads, table->n_of_philos);
+	destroy_mutexes();
 	ft_gc_exit();
 	print_err_msg(error_msg);
 	exit(1);
