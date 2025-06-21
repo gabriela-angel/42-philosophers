@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:14:32 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/21 18:40:59 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/21 20:26:50 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	print_action(t_philo *philo, t_action action)
 {
 	t_table	*table;
-	int	timestamp;
+	int		timestamp;
 
 	table = get_table();
 	timestamp = get_time_in_ms() - table->start_time;
@@ -55,7 +55,8 @@ static void	start_simulation(t_table *table)
 {
 	int		i;
 
-	table->start_time = get_time_in_ms() + (table->n_of_philos * 2 * 10);	i = 0;
+	table->start_time = get_time_in_ms() + (table->n_of_philos * 2 * 10);
+	i = 0;
 	while (i < table->n_of_philos)
 	{
 		if (pthread_create(&(table->threads[i].thread), NULL,

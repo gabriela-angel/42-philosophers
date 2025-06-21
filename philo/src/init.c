@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 17:29:14 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/21 19:16:56 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/21 20:26:30 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static void	init_forks(t_table *table)
 {
 	int	i;
 
-	table->fork_locks = (pthread_mutex_t *)ft_malloc(sizeof(pthread_mutex_t) * table->n_of_philos);
+	table->fork_locks = (pthread_mutex_t *)ft_malloc(sizeof(pthread_mutex_t) \
+		* table->n_of_philos);
 	if (!table->fork_locks)
 		handle_error(MALLOC_ERROR);
 	i = 0;
@@ -54,11 +55,13 @@ static void	init_threads(t_table *table)
 		table->threads[i].id = i;
 		table->threads[i].times_ate = 0;
 		table->threads[i].forks[0] = table->threads[i].id;
-		table->threads[i].forks[1] = (table->threads[i].id + 1) % table->n_of_philos;
+		table->threads[i].forks[1] = \
+			(table->threads[i].id + 1) % table->n_of_philos;
 		if (i % 2 == 0)
 		{
-			table->threads[i].forks[0] = (table->threads[i].id + 1) % table->n_of_philos;
-			table->threads[i].forks[1] = table->threads[i].id;			
+			table->threads[i].forks[0] = \
+				(table->threads[i].id + 1) % table->n_of_philos;
+			table->threads[i].forks[1] = table->threads[i].id;
 		}
 		i++;
 	}

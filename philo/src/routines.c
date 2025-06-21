@@ -30,7 +30,7 @@ static void	think(t_philo *philo, t_bool silent)
 	int		time_to_think;
 
 	table = get_table();
-	time_to_think = (table->time_to_die - (get_time_in_ms() - philo->last_meal)\
+	time_to_think = (table->time_to_die - (get_time_in_ms() - philo->last_meal) \
 			- table->time_to_eat) / 2;
 	if (time_to_think < 0)
 		time_to_think = 0;
@@ -72,9 +72,11 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = get_table();
+	pthread_mutex_lock(&table->meal_lock);
 	philo->last_meal = table->start_time;
+	pthread_mutex_unlock(&table->meal_lock);
 	while (get_time_in_ms() < table->start_time)
-		continue;
+		continue ;
 	if (table->n_of_philos == 1)
 	{
 		print_action(philo, TAKE_FORK);

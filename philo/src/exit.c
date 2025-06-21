@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 17:23:41 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/21 16:01:40 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/21 20:25:16 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 void	destroy_mutexes(void)
 {
 	t_table	*table;
-	int	i;
+	int		i;
 
 	i = 0;
 	table = get_table();
 	if (!table)
-		return;
+		return ;
 	pthread_mutex_destroy(&table->print_lock);
 	pthread_mutex_destroy(&table->stop_lock);
 	while (i < table->n_of_philos)
