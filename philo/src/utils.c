@@ -6,34 +6,11 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:04:08 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/21 20:06:19 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/22 21:48:27 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	get_time_in_ms(void)
-{
-	struct timeval	time;
-
-	if (gettimeofday(&time, NULL) == -1)
-		return (-1);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
-
-void	ft_usleep(int miliseconds)
-{
-	int	start_time;
-
-	start_time = get_time_in_ms();
-	while ((get_time_in_ms() - start_time) < miliseconds)
-	{
-		if (stop_simulation())
-			return ;
-		usleep(10);
-	}
-	return ;
-}
 
 t_table	*get_table(void)
 {

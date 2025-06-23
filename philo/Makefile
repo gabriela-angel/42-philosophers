@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 # NAME
-NAME = philosophers
+NAME = philo
 
 # COMPILATION AND FLAGS
 CC = cc
@@ -25,7 +25,7 @@ SRC_DIR = src/
 OBJ_DIR = obj/
 
 # MANDATORY FILES AND OBJECTS
-SRC := $(addprefix $(SRC_DIR), main.c utils.c exit.c init.c garbage_collector/ft_malloc.c garbage_collector/ft_malloc_utils.c)
+SRC := $(addprefix $(SRC_DIR), main.c utils.c time.c exit.c init.c routine.c manager.c garbage_collector/ft_malloc.c garbage_collector/ft_malloc_utils.c)
 OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 # VALGRIND TOOLS
