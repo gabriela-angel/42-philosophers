@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:14:32 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/22 22:40:37 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/23 01:03:10 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ void	print_action(t_philo *philo, t_action action)
 	timestamp = get_time_in_ms() - table->start_time;
 	if (!stop_simulation(0))
 	{
-		if (action == TAKE_FORK)
+		if (action == DIE)
+			printf("%d %d died\n", timestamp, (philo->id + 1));
+		else if (action == TAKE_FORK)
 			printf("%d %d has taken a fork\n", timestamp, (philo->id + 1));
 		else if (action == EAT)
 			printf("%d %d is eating\n", timestamp, (philo->id + 1));
@@ -30,8 +32,6 @@ void	print_action(t_philo *philo, t_action action)
 			printf("%d %d is sleeping\n", timestamp, (philo->id + 1));
 		else if (action == THINK)
 			printf("%d %d is thinking\n", timestamp, (philo->id + 1));
-		else if (action == DIE)
-			printf("%d %d died\n", timestamp, (philo->id + 1));
 	}
 	pthread_mutex_unlock(&table->print_lock);
 }
@@ -72,8 +72,11 @@ static void	start_simulation(t_table *table)
 				&manage_philos, table) != 0)
 			handle_error(THREAD_ERROR, 4, -1);
 	}
+	i = -1;
 	pthread_mutex_lock(&table->start_lock);
 	table->start_time = get_time_in_ms();
+	while (++i < table->n_of_philos)
+		table->threads[i].last_meal = table->start_time;
 	table->all_created = TRUE;
 	pthread_mutex_unlock(&table->start_lock);
 	join_threads(table);

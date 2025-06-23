@@ -6,7 +6,7 @@
 /*   By: gangel-a <gangel-a@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:14:54 by gangel-a          #+#    #+#             */
-/*   Updated: 2025/06/22 21:49:29 by gangel-a         ###   ########.fr       */
+/*   Updated: 2025/06/23 00:38:48 by gangel-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	int				id;
 	int				times_ate;
-	int				last_meal;
+	long			last_meal;
 	int				forks[2];
 	pthread_mutex_t	meal_lock;
 }	t_philo;
@@ -61,11 +61,11 @@ typedef struct s_table
 	t_philo			*threads;
 	pthread_t		manager;
 	int				n_of_philos;
+	int				times_each_eat;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				times_each_eat;
-	int				start_time;
+	long			start_time;
 	t_bool			stop_sim;
 	t_bool			all_created;
 	pthread_mutex_t	start_lock;
@@ -101,8 +101,8 @@ void		*manage_philos(void *arg);
 
 // TIME -------------------
 void		wait_for_start(t_table *table);
-int			get_time_in_ms(void);
-void		ft_usleep(int miliseconds);
+long		get_time_in_ms(void);
+void		ft_usleep(long miliseconds);
 
 // UTILS -------------------
 void		print_action(t_philo *philo, t_action action);

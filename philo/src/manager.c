@@ -37,7 +37,7 @@ static t_bool	starvation(void)
 	{
 		pthread_mutex_lock(&(table->threads[i]).meal_lock);
 		if ((get_time_in_ms() - table->threads[i].last_meal) \
-			> table->time_to_die)
+			> table->time_to_die + 1)
 		{
 			print_action(&(table->threads[i]), DIE);
 			stop_simulation(1);

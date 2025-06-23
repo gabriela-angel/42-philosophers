@@ -27,18 +27,17 @@ void	wait_for_start(t_table *table)
 	}
 }
 
-int	get_time_in_ms(void)
+long	get_time_in_ms(void)
 {
-	struct timeval	time;
+	struct timeval		tv;
 
-	if (gettimeofday(&time, NULL) == -1)
-		return (-1);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	ft_usleep(int miliseconds)
+void	ft_usleep(long miliseconds)
 {
-	int	start_time;
+	long	start_time;
 
 	start_time = get_time_in_ms();
 	while ((get_time_in_ms() - start_time) < miliseconds)
